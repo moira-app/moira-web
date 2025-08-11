@@ -74,6 +74,7 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -117,7 +118,13 @@
   * {
     @apply border-border outline-ring/50;
   }
+  html, body {
+    @apply w-full h-full m-0;
+  }
   body {
     @apply bg-background text-foreground;
+  }
+  #app {
+    @apply h-full
   }
 }
