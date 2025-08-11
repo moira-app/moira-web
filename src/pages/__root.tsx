@@ -1,15 +1,16 @@
 import * as React from 'react'
-import { Outlet, createRootRoute } from '@tanstack/react-router'
-import {TanStackRouterDevtools} from '@tanstack/react-router-devtools'
+import { Outlet, createRootRouteWithContext } from '@tanstack/react-router'
+import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
+import { type RouterContext } from '~app/router'
 
-export const Route = createRootRoute({
-  component: RootComponent,
+// find method to fix this
+export const Route = createRootRouteWithContext<RouterContext>()({
+  component: RootComponent
 })
 
 function RootComponent() {
   return (
     <React.Fragment>
-      <div>Hello "__root"!</div>
       <Outlet />
       <TanStackRouterDevtools />
     </React.Fragment>
