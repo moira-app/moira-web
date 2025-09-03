@@ -7,7 +7,11 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "workspace:build": "pnpm -r build",
+    "workspace:test": "pnpm -r test",
+    "workspace:lint": "pnpm -r lint",
+    "workspace:clean": "pnpm -r clean"
   },
   "dependencies": {
     "@radix-ui/react-scroll-area": "^1.2.9",
