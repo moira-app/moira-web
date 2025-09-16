@@ -10,11 +10,17 @@
 
 import { Route as rootRouteImport } from './../pages/__root'
 import { Route as RoomRouteImport } from './../pages/room'
+import { Route as BoardRouteImport } from './../pages/board'
 import { Route as IndexRouteImport } from './../pages/index'
 
 const RoomRoute = RoomRouteImport.update({
   id: '/room',
   path: '/room',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BoardRoute = BoardRouteImport.update({
+  id: '/board',
+  path: '/board',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -25,27 +31,31 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/board': typeof BoardRoute
   '/room': typeof RoomRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/board': typeof BoardRoute
   '/room': typeof RoomRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/board': typeof BoardRoute
   '/room': typeof RoomRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/room'
+  fullPaths: '/' | '/board' | '/room'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/room'
-  id: '__root__' | '/' | '/room'
+  to: '/' | '/board' | '/room'
+  id: '__root__' | '/' | '/board' | '/room'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BoardRoute: typeof BoardRoute
   RoomRoute: typeof RoomRoute
 }
 
@@ -56,6 +66,13 @@ declare module '@tanstack/react-router' {
       path: '/room'
       fullPath: '/room'
       preLoaderRoute: typeof RoomRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/board': {
+      id: '/board'
+      path: '/board'
+      fullPath: '/board'
+      preLoaderRoute: typeof BoardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -70,6 +87,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BoardRoute: BoardRoute,
   RoomRoute: RoomRoute,
 }
 export const routeTree = rootRouteImport
