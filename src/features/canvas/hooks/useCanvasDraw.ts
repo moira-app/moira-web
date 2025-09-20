@@ -1,8 +1,8 @@
-import { useState, useCallback, useEffect, type MouseEvent as ReactMouseEvent } from 'react'
+import { useRef, useState, useCallback, useEffect, type MouseEvent as ReactMouseEvent } from 'react'
 
 function useCanvasDraw(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
   /*default drawingState: false*/
-  const [isDrawing, setIsDrawing] = useState(false)
+  const isDrawingRef = useRef(false)
   const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null)
 
   useEffect(() => {
@@ -17,27 +17,21 @@ function useCanvasDraw(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
     setCtx(ctx)
   }, [canvasRef])
 
-  const handleDrawStart = useCallback(
-    (e: ReactMouseEvent<HTMLCanvasElement>) => {
-      if (!ctx) return
-      ctx?.beginPath()
-      ctx?.moveTo(e.clientX, e.clientY)
-      setIsDrawing(true)
-    },
-    [ctx]
-  )
+  const handleDrawStart = (e: ReactMouseEvent<HTMLCanvasElement>) => {
+    if (!ctx) return
+    isDrawingRef.current = true
+    ctx.beginPath()
+    ctx.moveTo(e.clientX, e.clientY)
+  }
 
-  const handleDrawMove = useCallback(
-    (e: ReactMouseEvent<HTMLCanvasElement>) => {
-      if (!ctx || !isDrawing) return
-      ctx?.lineTo(e.clientX, e.clientY)
-      ctx?.stroke()
-    },
-    [isDrawing, ctx]
-  )
+  const handleDrawMove = (e: ReactMouseEvent<HTMLCanvasElement>) => {
+    if (!ctx || !isDrawingRef.current) return
+    ctx?.lineTo(e.clientX, e.clientY)
+    ctx?.stroke()
+  }
 
   const handleDrawEnd = useCallback(() => {
-    setIsDrawing(false)
+    isDrawingRef.current = false
   }, [])
   return { handleDrawStart, handleDrawMove, handleDrawEnd }
 }
