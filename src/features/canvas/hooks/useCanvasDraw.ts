@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback, useEffect, type MouseEvent as ReactMouseEvent } from 'react'
+import { useRef, useState, useEffect, type MouseEvent as ReactMouseEvent } from 'react'
 
 function useCanvasDraw(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
   /*default drawingState: false*/
@@ -30,9 +30,10 @@ function useCanvasDraw(canvasRef: React.RefObject<HTMLCanvasElement | null>) {
     ctx?.stroke()
   }
 
-  const handleDrawEnd = useCallback(() => {
+  const handleDrawEnd = () => {
     isDrawingRef.current = false
-  }, [])
+  }
+
   return { handleDrawStart, handleDrawMove, handleDrawEnd }
 }
 

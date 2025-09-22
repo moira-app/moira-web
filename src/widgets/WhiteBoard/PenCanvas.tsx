@@ -1,14 +1,13 @@
 import { useRef } from 'react'
 import { useCanvasDraw } from '~features/canvas/hooks/useCanvasDraw'
 
-function Editor() {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null)
-
-  const { handleDrawStart, handleDrawMove, handleDrawEnd } = useCanvasDraw(canvasRef)
+function PenCanvas() {
+  const penCanvasRef = useRef<HTMLCanvasElement | null>(null)
+  const { handleDrawStart, handleDrawMove, handleDrawEnd } = useCanvasDraw(penCanvasRef)
 
   return (
     <canvas
-      ref={canvasRef}
+      ref={penCanvasRef}
       width={window.innerWidth}
       height={window.innerHeight}
       onMouseDown={handleDrawStart}
@@ -18,4 +17,4 @@ function Editor() {
   )
 }
 
-export { Editor }
+export { PenCanvas }
