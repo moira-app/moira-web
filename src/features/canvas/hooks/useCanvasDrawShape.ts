@@ -9,7 +9,7 @@ function useCanvasDrawShape(canvas: Canvas | null) {
   const originY = useRef(0)
   const rectRef = useRef<Rect | null>(null)
 
-  const handleMouseDown = (opt) => {
+  const handleDrawStart = (opt) => {
     if (!canvas) return
     isDown.current = true
     const pointer = opt.viewportPoint
@@ -29,7 +29,7 @@ function useCanvasDrawShape(canvas: Canvas | null) {
     canvas.add(rect)
   }
 
-  const handleMouseMove = (opt) => {
+  const handleDrawMove = (opt) => {
     if (!canvas) return
     if (!isDown.current || !rectRef.current) return
     const pointer = opt.viewportPoint
@@ -44,7 +44,7 @@ function useCanvasDrawShape(canvas: Canvas | null) {
     canvas.renderAll()
   }
 
-  const handleMouseUp = () => {
+  const handleDrawEnd = () => {
     if (!canvas) return
     isDown.current = false
     if (rectRef.current) {
@@ -53,7 +53,7 @@ function useCanvasDrawShape(canvas: Canvas | null) {
     }
   }
 
-  return { handleMouseDown, handleMouseMove, handleMouseUp }
+  return { handleDrawStart, handleDrawMove, handleDrawEnd }
 }
 
 export { useCanvasDrawShape }

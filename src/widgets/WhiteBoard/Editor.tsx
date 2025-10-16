@@ -34,7 +34,6 @@ function Editor() {
   // 줌 이벤트 연결
   const handleZoom = useCallback(
     (opt) => {
-      console.log('djkfa')
       const delta = opt.e.deltaY
       let scale = canvas?.getZoom() ?? 1
       scale *= 0.999 ** delta
