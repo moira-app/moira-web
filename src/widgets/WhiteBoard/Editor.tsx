@@ -34,12 +34,15 @@ function Editor() {
   // 줌 이벤트 연결
   const handleZoom = useCallback(
     (opt) => {
-      const delta = opt.e.deltaY
-      let scale = canvas?.getZoom() ?? 1
+      if (!canvas) return
+      const e = opt.e
+      const delta = e.deltaY
+      const cur = canvas.getScenePoint(e)
+      let scale = canvas.getZoom()
       scale *= 0.999 ** delta
-      if (scale > 20) scale = 20
-      if (scale < 0.01) scale = 0.01
-      canvas?.zoomToPoint(new Point({ x: opt.e.offsetX, y: opt.e.offsetY }), scale)
+      if (scale > 10) scale = 10
+      if (scale < 0.1) scale = 0.1
+      canvas.zoomToPoint(cur, scale)
       opt.e.preventDefault()
       opt.e.stopPropagation()
     },

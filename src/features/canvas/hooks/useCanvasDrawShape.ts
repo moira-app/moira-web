@@ -18,7 +18,7 @@ function useCanvasDrawShape(canvas: Canvas | null) {
       left: lastPos.current.x,
       top: lastPos.current.y,
       stroke: 'black',
-      fill: 'black',
+      fill: 'white',
       strokeWidth: 2,
       selectable: false,
       evented: false

@@ -8,24 +8,21 @@ function useHandTool(canvas: Canvas | null) {
     if (!canvas) return
     isPanning.current = true
     const e = opt.e
-    lastPos.current = canvas.getScenePoint(e)
+    lastPos.current = new Point(e.clientX, e.clientY)
   }
   const handlePanMove = (opt) => {
     if (!isPanning.current || !lastPos.current || !canvas) return
     const e = opt.e
-    const cur = canvas.getScenePoint(e)
     const vpt = canvas.viewportTransform
-    const zoom = canvas.getZoom()
     if (!vpt) return
-    vpt[4] += (cur.x - lastPos.current.x) / zoom
-    vpt[5] += (cur.y - lastPos.current.y) / zoom
+    vpt[4] += e.clientX - lastPos.current.x
+    vpt[5] += e.clientY - lastPos.current.y
     canvas.requestRenderAll()
-    lastPos.current.setXY(cur.x, cur.y)
+    lastPos.current.setXY(e.clientX, e.clientY)
   }
 
   const handlePanEnd = () => {
     isPanning.current = false
-    lastPos.current = null
   }
   return { handlePanStart, handlePanMove, handlePanEnd }
 }
