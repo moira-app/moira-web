@@ -1,25 +1,24 @@
 import { useRef } from 'react'
-import { Canvas, Rect } from 'fabric'
+import { Canvas, Point, Rect } from 'fabric'
 
 function useCanvasDrawShape(canvas: Canvas | null) {
   /* 사각형 그리기 */
 
   const isDown = useRef(false)
-  const originX = useRef(0)
-  const originY = useRef(0)
+  const lastPos = useRef<Point | null>(null)
   const rectRef = useRef<Rect | null>(null)
 
   const handleDrawStart = (opt) => {
     if (!canvas) return
     isDown.current = true
-    const pointer = opt.viewportPoint
-    originX.current = pointer.x
-    originY.current = pointer.y
+    const e = opt.e
+    lastPos.current = canvas.getScenePoint(e)
 
     const rect = new Rect({
-      left: originX.current,
-      top: originY.current,
-      stroke: 'blue',
+      left: lastPos.current.x,
+      top: lastPos.current.y,
+      stroke: 'black',
+      fill: 'black',
       strokeWidth: 2,
       selectable: false,
       evented: false
@@ -31,22 +30,24 @@ function useCanvasDrawShape(canvas: Canvas | null) {
 
   const handleDrawMove = (opt) => {
     if (!canvas) return
-    if (!isDown.current || !rectRef.current) return
-    const pointer = opt.viewportPoint
+    if (!canvas || !isDown.current || !rectRef.current || !lastPos.current) return
+    const e = opt.e
+    const cur = canvas.getScenePoint(e)
 
-    if (pointer.x < originX.current) rectRef.current.set({ left: pointer.x })
-    if (pointer.y < originY.current) rectRef.current.set({ left: pointer.y })
+    if (cur.x < lastPos.current.x) rectRef.current.set({ left: cur.x })
+    if (cur.y < lastPos.current.y) rectRef.current.set({ top: cur.y })
 
     rectRef.current.set({
-      width: Math.abs(pointer.x - originX.current),
-      height: Math.abs(pointer.y - originY.current)
+      width: Math.abs(cur.x - lastPos.current.x),
+      height: Math.abs(cur.y - lastPos.current.y)
     })
-    canvas.renderAll()
+    canvas.requestRenderAll()
   }
 
   const handleDrawEnd = () => {
     if (!canvas) return
     isDown.current = false
+    lastPos.current = null
     if (rectRef.current) {
       rectRef.current.set({ selectable: true, evented: true })
       rectRef.current = null
