@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect, useCallback } from 'react'
-import { Canvas, PencilBrush, Point } from 'fabric'
+import { ActiveSelection, Canvas, FabricObject, PencilBrush, Point } from 'fabric'
 import { ActiveTool } from '~widgets/WhiteBoard/ActiveTool'
 
 function Editor() {
@@ -18,7 +18,9 @@ function Editor() {
     setCanvas(newCanvas)
 
     return () => {
-      newCanvas.dispose()
+      ;(async () => {
+        await newCanvas.dispose()
+      })()
     }
   }, [])
 
@@ -54,7 +56,36 @@ function Editor() {
     canvas.on('mouse:wheel', handleZoom)
 
     return () => canvas.off('mouse:wheel', handleZoom)
-  }, [canvas, handleZoom])
+  }, [canvas])
+
+  // 삭제 이벤트 연결
+  const handleRemove = useCallback(
+    (e: KeyboardEvent) => {
+      if (!canvas) return
+      if (e.key === 'Delete' || e.key === 'Backspace') {
+        const active = canvas.getActiveObject() as FabricObject | ActiveSelection | null
+        if (!active) return
+        if (active && active.type === 'activeselection') {
+          // 여러개 선택 시
+          const selection = active as ActiveSelection
+          selection.forEachObject((obj) => canvas.remove(obj))
+          canvas.discardActiveObject()
+        } else {
+          canvas.remove(active)
+        }
+        canvas.requestRenderAll()
+      }
+    },
+    [canvas]
+  )
+
+  useEffect(() => {
+    // 전역 키 이벤트 등록
+    document.addEventListener('keydown', handleRemove)
+    return () => {
+      document.removeEventListener('keydown', handleRemove)
+    }
+  }, [canvas])
 
   return (
     <div>
