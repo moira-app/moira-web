@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { Canvas, Point, Rect } from 'fabric'
+import { Canvas, Point, Rect, type TPointerEventInfo, type TPointerEvent } from 'fabric'
 
 function useCanvasDrawShape(canvas: Canvas | null) {
   /* 사각형 그리기 */
@@ -8,10 +8,10 @@ function useCanvasDrawShape(canvas: Canvas | null) {
   const lastPos = useRef<Point | null>(null)
   const rectRef = useRef<Rect | null>(null)
 
-  const handleDrawStart = (opt) => {
+  const handleDrawStart = (opt: TPointerEventInfo<TPointerEvent>) => {
     if (!canvas) return
     isDown.current = true
-    const e = opt.e
+    const e = opt.e as PointerEvent
     lastPos.current = canvas.getScenePoint(e)
 
     const rect = new Rect({
@@ -28,7 +28,7 @@ function useCanvasDrawShape(canvas: Canvas | null) {
     canvas.add(rect)
   }
 
-  const handleDrawMove = (opt) => {
+  const handleDrawMove = (opt: TPointerEventInfo<TPointerEvent>) => {
     if (!canvas) return
     if (!canvas || !isDown.current || !rectRef.current || !lastPos.current) return
     const e = opt.e

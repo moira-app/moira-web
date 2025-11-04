@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect, useCallback } from 'react'
-import { ActiveSelection, Canvas, FabricObject, PencilBrush, Point } from 'fabric'
+import { ActiveSelection, Canvas, FabricObject, PencilBrush, type TPointerEventInfo } from 'fabric'
 import { ActiveTool } from '~widgets/WhiteBoard/ActiveTool'
 
 function Editor() {
@@ -35,7 +35,7 @@ function Editor() {
 
   // 줌 이벤트 연결
   const handleZoom = useCallback(
-    (opt) => {
+    (opt: TPointerEventInfo<WheelEvent>) => {
       if (!canvas) return
       const e = opt.e
       const delta = e.deltaY
@@ -68,7 +68,7 @@ function Editor() {
         if (active && active.type === 'activeselection') {
           // 여러개 선택 시
           const selection = active as ActiveSelection
-          selection.forEachObject((obj) => canvas.remove(obj))
+          selection.forEachObject((obj: FabricObject) => canvas.remove(obj))
           canvas.discardActiveObject()
         } else {
           canvas.remove(active)

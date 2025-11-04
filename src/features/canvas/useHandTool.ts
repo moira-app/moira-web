@@ -1,18 +1,18 @@
 import { useRef } from 'react'
-import { Canvas, Point } from 'fabric'
+import { Canvas, Point, type TPointerEventInfo, type TPointerEvent } from 'fabric'
 
 function useHandTool(canvas: Canvas | null) {
   const isPanning = useRef(false)
   const lastPos = useRef<Point | null>(null)
-  const handlePanStart = (opt) => {
+  const handlePanStart = (opt: TPointerEventInfo<TPointerEvent>) => {
     if (!canvas) return
     isPanning.current = true
-    const e = opt.e
+    const e = opt.e as PointerEvent
     lastPos.current = new Point(e.clientX, e.clientY)
   }
-  const handlePanMove = (opt) => {
+  const handlePanMove = (opt: TPointerEventInfo<TPointerEvent>) => {
     if (!isPanning.current || !lastPos.current || !canvas) return
-    const e = opt.e
+    const e = opt.e as PointerEvent
     const vpt = canvas.viewportTransform
     if (!vpt) return
     vpt[4] += e.clientX - lastPos.current.x
