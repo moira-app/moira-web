@@ -2,7 +2,7 @@ import { useRef } from 'react'
 import { Canvas, Point, type TPointerEventInfo, type TPointerEvent } from 'fabric'
 
 function useHandTool(canvas: Canvas | null) {
-  const isPanning = useRef(false)
+  const isPanning = useRef<boolean>(false)
   const lastPos = useRef<Point | null>(null)
   const handlePanStart = (opt: TPointerEventInfo<TPointerEvent>) => {
     if (!canvas) return

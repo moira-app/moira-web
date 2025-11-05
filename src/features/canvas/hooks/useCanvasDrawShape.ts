@@ -4,7 +4,7 @@ import { Canvas, Point, Rect, type TPointerEventInfo, type TPointerEvent } from 
 function useCanvasDrawShape(canvas: Canvas | null) {
   /* 사각형 그리기 */
 
-  const isDown = useRef(false)
+  const isDown = useRef<boolean>(false)
   const lastPos = useRef<Point | null>(null)
   const rectRef = useRef<Rect | null>(null)
 
