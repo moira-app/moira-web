@@ -1,20 +1,29 @@
-import { createFileRoute, redirect } from '@tanstack/react-router'
+import { createFileRoute, redirect, useRouter } from '@tanstack/react-router'
 import { useState } from 'react'
+import { authInstance } from '~shared/api/instance'
+import { useUserStore } from '~entities/user/model/userStore'
 
 export const Route = createFileRoute('/login')({
   validateSearch: (search) => ({
-    redirect: (search.redirect as string) || '/dashboard',
+    redirect: (search.redirect as string) || '/'
   }),
-  beforeLoad: ({ context, search }) => {
-    if (context.auth.isAuthenticated) {
+  beforeLoad: ({ search }) => {
+    const { isLoggedIn } = useUserStore.getState()
+    console.log(search)
+    if (isLoggedIn) {
       throw redirect({ to: search.redirect })
     }
   },
-  component: LoginComponent,
+  component: LoginComponent
 })
 
+interface AuthResponse {
+  mail: string
+  password: string
+}
+
 function LoginComponent() {
-  const { auth } = Route.useRouteContext()
+  const router = useRouter()
   const { redirect } = Route.useSearch()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -25,11 +34,17 @@ function LoginComponent() {
     e.preventDefault()
     setIsLoading(true)
     setError('')
-
     try {
-      await auth.login(email, password)
-      window.location.href = redirect
+      const res = await authInstance.post<AuthResponse>('/member/login', {
+        mail: email,
+        password: password
+      })
+      console.log(res)
+      console.log('로그인됨')
+      router.history.push(redirect)
     } catch (err: any) {
+      console.log(err)
+      console.log(err.response?.data)
       setError(err.message || 'Login failed')
     } finally {
       setIsLoading(false)
@@ -46,10 +61,7 @@ function LoginComponent() {
 
   return (
     <div className="min-h-screen flex items-center justify-center">
-      <form
-        onSubmit={handleSubmit}
-        className="max-w-md w-full space-y-4 p-6 border rounded-lg"
-      >
+      <form onSubmit={handleSubmit} className="max-w-md w-full space-y-4 p-6 border rounded-lg">
         <h1 className="text-2xl font-bold text-center">Sign In</h1>
 
         {error && (

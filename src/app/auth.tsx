@@ -2,28 +2,22 @@ import { createClient, type Provider, type User } from '@supabase/supabase-js'
 import { createContext, useContext, useEffect, useState } from 'react'
 
 const supabase = createClient(
-    import.meta.env.VITE_SUPABASE_URL,
-    import.meta.env.VITE_SUPABASE_ANON_KEY,
+  import.meta.env.VITE_SUPABASE_URL,
+  import.meta.env.VITE_SUPABASE_ANON_KEY
 )
 
 export interface SupabaseAuthState {
-    isAuthenticated: boolean
-    user: User | null // kakao policy disallows email address
-    login: (email: string, password: string) => Promise<void>
-    loginWithOAuth: (provider: 'kakao') => Promise<void>
-    logout: () => Promise<void>
-    isLoading: boolean
+  isAuthenticated: boolean
+  user: User | null // kakao policy disallows email address
+  login: (email: string, password: string) => Promise<void>
+  loginWithOAuth: (provider: 'kakao') => Promise<void>
+  logout: () => Promise<void>
+  isLoading: boolean
 }
 
-const SupabaseAuthContext = createContext<SupabaseAuthState | undefined>(
-  undefined,
-)
+const SupabaseAuthContext = createContext<SupabaseAuthState | undefined>(undefined)
 
-export function SupabaseAuthProvider({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export function SupabaseAuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
@@ -38,7 +32,7 @@ export function SupabaseAuthProvider({
 
     // Listen for auth changes
     const {
-      data: { subscription },
+      data: { subscription }
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null)
       setIsAuthenticated(!!session?.user)
@@ -51,7 +45,7 @@ export function SupabaseAuthProvider({
   const login = async (email: string, password: string) => {
     const { error } = await supabase.auth.signInWithPassword({
       email,
-      password,
+      password
     })
     if (error) throw error
   }
@@ -76,7 +70,7 @@ export function SupabaseAuthProvider({
         login,
         loginWithOAuth,
         logout,
-        isLoading,
+        isLoading
       }}
     >
       {children}

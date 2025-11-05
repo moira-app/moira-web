@@ -13,7 +13,7 @@ export default defineConfig({
       target: 'react',
       // autoCodeSplitting: true, // only when required
       routesDirectory: join(__dirname, './src/pages'), // for fsd
-      generatedRouteTree: join(__dirname, './src/app/routeTree.gen.ts'),
+      generatedRouteTree: join(__dirname, './src/app/routeTree.gen.ts')
     })
   ],
   resolve: {
@@ -25,6 +25,18 @@ export default defineConfig({
       '~features': join(__dirname, './src/features'),
       '~entities': join(__dirname, './src/entities'),
       '~shared': join(__dirname, './src/shared')
+    }
+  },
+  server: {
+    proxy: {
+      '/api': {
+        // 서버 base 주소
+        target: 'http://localhost:8080',
+        // target으로 변경
+        changeOrigin: true,
+        // 요청 경로에서 '/api' 제거
+        rewrite: (path) => path.replace(/^\/api/, '')
+      }
     }
   }
 })

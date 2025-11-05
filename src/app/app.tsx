@@ -6,12 +6,12 @@ import Router from './router'
 
 function App() {
   return (
-    <SupabaseAuthProvider>
-      <QueryClientProvider client={queryClient}>
-        <Router />
-        <ReactQueryDevtools />
-      </QueryClientProvider>
-    </SupabaseAuthProvider>
+    // <SupabaseAuthProvider>
+    <QueryClientProvider client={queryClient}>
+      <Router />
+      <ReactQueryDevtools />
+    </QueryClientProvider>
+    // </SupabaseAuthProvider>
   )
 }
 

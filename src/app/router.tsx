@@ -11,18 +11,16 @@ export const router = createRouter({
   defaultStructuralSharing: true,
 
   context: {
-    queryClient,
-    auth: undefined!
+    queryClient
   },
-  defaultPreload: "intent", // preload when hovering over link
+  defaultPreload: 'intent', // preload when hovering over link
   // Since we're using React Query, we don't want loader calls to ever be stale
   // This will ensure that the loader is always called when the route is preloaded or visited
-  defaultPreloadStaleTime: 0,
+  defaultPreloadStaleTime: 0
 })
 
 export interface RouterContext {
   queryClient: typeof queryClient
-  auth: SupabaseAuthState
 }
 
 // Register the router instance for type safety
@@ -34,16 +32,12 @@ declare module '@tanstack/react-router' {
 }
 
 function Router() {
-  const auth = useSupabaseAuth()
+  // const auth = useSupabaseAuth()
 
-  if (auth.isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        Loading...
-      </div>
-    )
-  }
-  return <RouterProvider router={router} context={{queryClient, auth}}/>
+  // if (auth.isLoading) {
+  //   return <div className="flex items-center justify-center min-h-screen">Loading...</div>
+  // }
+  return <RouterProvider router={router} context={{ queryClient }} />
 }
 
 export default Router
