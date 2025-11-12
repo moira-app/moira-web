@@ -1,0 +1,10 @@
+packages:
+  # Main application
+  - '.'
+  
+  # Whiteboard packages
+  - 'src/shared/lib/whiteboard/*'
+  
+  # Future packages can be added here
+  # - 'packages/*'
+  # - 'apps/*'
