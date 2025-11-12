@@ -2,7 +2,6 @@ import { createFileRoute, redirect, useRouter } from '@tanstack/react-router'
 import { useState } from 'react'
 import { authInstance } from '~shared/api/instance'
 import { useUserStore } from '~entities/user/model/userStore'
-import { useGoogleLogin } from '@react-oauth/google'
 
 export const Route = createFileRoute('/login')({
   validateSearch: (search) => ({
@@ -52,16 +51,13 @@ function LoginComponent() {
     }
   }
 
-  const handleOAuthLogin = useGoogleLogin({
-    onSuccess: (credentialResponse) => {
-      console.log(credentialResponse)
-      router.history.push(redirect)
-    },
-    onError: () => {
-      console.log('Login Failed')
+  const handleOAuthLogin = async (provider: 'kakao') => {
+    try {
+      await auth.loginWithOAuth(provider)
+    } catch (err: any) {
+      setError(err.message || `OAuth login with ${provider} failed`)
     }
-    // 추가 옵션 설정 가능
-  })
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center">
@@ -118,10 +114,10 @@ function LoginComponent() {
 
         <button
           type="button"
-          onClick={() => handleOAuthLogin()}
+          onClick={() => handleOAuthLogin('kakao')}
           className="w-full bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600"
         >
-          Continue with Google
+          Continue with Kakao
         </button>
       </form>
     </div>
