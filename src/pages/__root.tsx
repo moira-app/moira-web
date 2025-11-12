@@ -10,6 +10,8 @@ function RootComponent() {
   return (
     <React.Fragment>
           <Outlet />
+      <div>Hello "__root"!!!</div>
+      <Outlet />
       <TanStackRouterDevtools />
     </React.Fragment>
   )
